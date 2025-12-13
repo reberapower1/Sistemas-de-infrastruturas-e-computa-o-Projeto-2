@@ -38,6 +38,7 @@ if __name__ == "__main__":
     while True:
         for _ in range(10):
             line = generate_eclss_point()
+            print(f"ECLSS: {line}") 
             producer.send(TOPIC, line)
         producer.flush()
         time.sleep(5)

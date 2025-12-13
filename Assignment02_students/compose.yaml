@@ -90,7 +90,8 @@ services:
     environment:
       KAFKA_BOOTSTRAP_SERVERS: "kafka:9092"
       KAFKA_TOPIC: "telemetry-mobility"
-    command: ["python", "producer_mobility.py"]
+      PYTHONUNBUFFERED: 1
+    command: ["python","-u", "producer_mobility.py"]
 
   producer_eclss:
     build:
@@ -105,7 +106,8 @@ services:
     environment:
       KAFKA_BOOTSTRAP_SERVERS: "kafka:9092"
       KAFKA_TOPIC: "telemetry-eclss"
-    command: ["python", "producer_eclss.py"]
+      PYTHONUNBUFFERED: 1
+    command: ["python", "-u", "producer_eclss.py"]
 
   producer_hga:
     build:
@@ -120,7 +122,8 @@ services:
     environment:
       KAFKA_BOOTSTRAP_SERVERS: "kafka:9092"
       KAFKA_TOPIC: "telemetry-comms"
-    command: ["python", "producer_hga.py"]
+      PYTHONUNBUFFERED: 1
+    command: ["python","-u", "producer_hga.py"]
 
 #volumes geridos pelo docker
 volumes:

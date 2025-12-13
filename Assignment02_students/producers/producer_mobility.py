@@ -41,6 +41,7 @@ if __name__ == "__main__":
     while True:
         for _ in range(10):  # burst de 10 pontos
             line = generate_mobility_point()
+            print(f"MOBILITY: {line}")
             producer.send(TOPIC, line)
         producer.flush()
         time.sleep(5)

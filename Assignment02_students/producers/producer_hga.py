@@ -39,6 +39,7 @@ if __name__ == "__main__":
     while True:
         for _ in range(10):
             line = generate_hga_point()
+            print(f"HGA: {line}")
             producer.send(TOPIC, line)
         producer.flush()
         time.sleep(5)
