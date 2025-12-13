@@ -18,12 +18,12 @@ def generate_hga_point():
 
     if degraded:
         snr_db = random.uniform(0, 5)
-        ber = random.uniform(1e-3, 1e-2)
+        ber = random.uniform(0, 1)
         latency_ms = random.uniform(800, 2000)
         status = "degraded"
     else:
         snr_db = random.uniform(15, 30)
-        ber = random.uniform(1e-7, 1e-5)
+        ber = random.uniform(0, 0.0001)
         latency_ms = random.uniform(200, 800)
         status = "nominal"
 

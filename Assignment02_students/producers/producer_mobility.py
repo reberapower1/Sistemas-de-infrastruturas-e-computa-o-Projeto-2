@@ -18,12 +18,15 @@ def generate_mobility_point():
     global battery_voltage
 
     # bateria decai e volta a carregar ciclicamente
-    battery_voltage -= random.uniform(0.1, 0.5)
+    battery_voltage -= random.uniform(0, 0.5)
     if battery_voltage < 20.0:
         battery_voltage = 100.0
 
-    motor_rpm = random.uniform(0, 5000)
-    wheel_traction = max(0.0, min(1.0, random.gauss(0.8, 0.1)))
+    motor_rpm = random.uniform(0, 2000)
+    if random.random() < 0.85:
+        wheel_traction = random.uniform(0.7, 1.0)
+    else:
+        wheel_traction = random.uniform(0.0, 0.3)  # Slippage
 
     # InfluxDB Line Protocol
     line = (
