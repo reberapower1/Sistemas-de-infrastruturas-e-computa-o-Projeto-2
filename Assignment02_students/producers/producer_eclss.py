@@ -27,18 +27,18 @@ def generate_eclss_point():
     cabin_pressure = random.uniform(90.0, 110.0)  # kPa
 
     line = (
-        f"eclss,location=cabin "
-        f"external_temp={external_temp},"
-        f"radiation_svh={radiation},"
-        f"cabin_pressure_kpa={cabin_pressure}"
-    )
+    f"eclss,location=cabin "
+    f"external_temp={external_temp:.2f},"
+    f"radiation_svh={radiation:.4f},"
+    f"cabin_pressure_kpa={cabin_pressure:.2f}"
+)
+
     return line
 
 if __name__ == "__main__":
     while True:
         for _ in range(10):
             line = generate_eclss_point()
-            print(f"ECLSS: {line}") 
             producer.send(TOPIC, line)
         producer.flush()
         time.sleep(5)

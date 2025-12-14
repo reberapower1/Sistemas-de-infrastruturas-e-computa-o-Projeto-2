@@ -22,7 +22,8 @@ def generate_mobility_point():
     if battery_voltage < 20.0:
         battery_voltage = 100.0
 
-    motor_rpm = random.uniform(0, 2000)
+    motor_rpm = random.uniform(2000, 5000)
+
     if random.random() < 0.85:
         wheel_traction = random.uniform(0.7, 1.0)
     else:
@@ -30,18 +31,19 @@ def generate_mobility_point():
 
     # InfluxDB Line Protocol
     line = (
-        f"mobility,unit=rover "
-        f"battery_voltage={battery_voltage},"
-        f"motor_rpm={motor_rpm},"
-        f"wheel_traction={wheel_traction}"
-    )
+    f"mobility,unit=rover "
+    f"battery_voltage={battery_voltage:.2f},"
+    f"motor_rpm={motor_rpm:.2f},"
+    f"wheel_traction={wheel_traction:.4f}"
+)
+ 
     return line
 
 if __name__ == "__main__":
     while True:
         for _ in range(10):  # burst de 10 pontos
             line = generate_mobility_point()
-            print(f"MOBILITY: {line}")
+            print(line)
             producer.send(TOPIC, line)
         producer.flush()
         time.sleep(5)

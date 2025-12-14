@@ -1,4 +1,3 @@
-// Alerta para HGA: SNR, BER e Latência
 option task = {
   name: "alert_hga",
   every: 10s
@@ -7,56 +6,44 @@ option task = {
 // SNR
 from(bucket: "lunar-mission")
   |> range(start: -task.every)
-  |> filter(fn: (r) => r._measurement == "hga")
-  |> filter(fn: (r) => r._field == "snr_db")
+  |> filter(fn: (r) => r._measurement == "hga" and r._field == "snr_db")
   |> last()
   |> map(fn: (r) => ({
-    r with
-    _level: if r._value < 5.0 then "CRIT"
-             else if r._value < 15.0 then "WARN"
-             else "OK"
+      r with
+      _level:
+        if r._value < 5.0 then "CRIT"
+        else if r._value < 10.0 then "WARN"
+        else "OK",
+      _message: "HGA SNR: " + string(v: r._value) + " dB"
   }))
-  |> monitor.check(
-    data: {
-      message: "HGA SNR is ${r._value} dB (status: ${r._level})",
-      statusData: r
-    }
-  )
+  |> yield(name: "snr_alert")
 
 // BER
 from(bucket: "lunar-mission")
   |> range(start: -task.every)
-  |> filter(fn: (r) => r._measurement == "hga")
-  |> filter(fn: (r) => r._field == "ber")
+  |> filter(fn: (r) => r._measurement == "hga" and r._field == "ber")
   |> last()
   |> map(fn: (r) => ({
-    r with
-    _level: if r._value > 0.01 then "CRIT"
-             else if r._value > 0.001 then "WARN"
-             else "OK"
+      r with
+      _level:
+        if r._value >= 0.02 then "CRIT"
+        else if r._value >= 0.01 then "WARN"
+        else "OK",
+      _message: "HGA BER: " + string(v: r._value)
   }))
-  |> monitor.check(
-    data: {
-      message: "HGA BER is ${r._value} (status: ${r._level})",
-      statusData: r
-    }
-  )
+  |> yield(name: "ber_alert")
 
 // Latência
 from(bucket: "lunar-mission")
   |> range(start: -task.every)
-  |> filter(fn: (r) => r._measurement == "hga")
-  |> filter(fn: (r) => r._field == "latency_ms")
+  |> filter(fn: (r) => r._measurement == "hga" and r._field == "latency_ms")
   |> last()
   |> map(fn: (r) => ({
-    r with
-    _level: if r._value > 1500.0 then "CRIT"
-             else if r._value > 1000.0 then "WARN"
-             else "OK"
+      r with
+      _level:
+        if r._value >= 700.0 then "CRIT"
+        else if r._value >= 400.0 then "WARN"
+        else "OK",
+      _message: "HGA Latency: " + string(v: r._value) + " ms"
   }))
-  |> monitor.check(
-    data: {
-      message: "HGA latency is ${r._value} ms (status: ${r._level})",
-      statusData: r
-    }
-  )
+  |> yield(name: "latency_alert")

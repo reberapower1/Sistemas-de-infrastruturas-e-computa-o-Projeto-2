@@ -18,28 +18,26 @@ def generate_hga_point():
 
     if degraded:
         snr_db = random.uniform(0, 5)
-        ber = random.uniform(0, 1)
-        latency_ms = random.uniform(800, 2000)
+        ber = random.uniform(0.2,0.9)
+        latency_ms = random.uniform(500, 800)
         status = "degraded"
     else:
-        snr_db = random.uniform(15, 30)
-        ber = random.uniform(0, 0.0001)
-        latency_ms = random.uniform(200, 800)
+        snr_db = random.uniform(20, 30)
+        ber = random.uniform(0.01,0.09)
+        latency_ms = random.uniform(150, 350)
         status = "nominal"
 
     line = (
-        f"hga,link_status={status} "
-        f"snr_db={snr_db},"
-        f"ber={ber},"
-        f"latency_ms={latency_ms}"
+    f"hga,link_status={status} snr_db={snr_db:.2f},ber={ber:.5f},latency_ms={latency_ms:.2f}"
     )
+
     return line
 
 if __name__ == "__main__":
     while True:
         for _ in range(10):
             line = generate_hga_point()
-            print(f"HGA: {line}")
             producer.send(TOPIC, line)
+            print(line)
         producer.flush()
         time.sleep(5)
